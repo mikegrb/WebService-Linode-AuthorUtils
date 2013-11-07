@@ -58,6 +58,7 @@ sub dump_validation {
 
 sub dump_arrayref {
         my $ref = shift;
+        @$ref = sort @$ref;
         if ( @$ref == 0 ) {
             return '[]';
         }
