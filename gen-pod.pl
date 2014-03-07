@@ -27,15 +27,15 @@ my %validation = (
         update => [ [ 'domainid' ], [qw( axfr_ips description domain expire_sec lpm_displaygroup master_ips refresh_sec retry_sec soa_email status ttl_sec type )] ],
     },
     domain_resource => {
-        create => [ [qw( domainid type )], [qw( name port priority protocol target ttl_sec weight )] ],
+        create => [ [ 'domainid', 'type' ], [qw( name port priority protocol target ttl_sec weight )] ],
         delete => [ [ 'domainid', 'resourceid' ], [] ],
         list => [ [ 'domainid' ], [ 'resourceid' ] ],
         update => [ [ 'resourceid' ], [qw( domainid name port priority protocol target ttl_sec weight )] ],
     },
     linode => {
         boot => [ [ 'linodeid' ], [ 'configid' ] ],
-        clone => [ [qw( datacenterid linodeid paymentterm planid )], [] ],
-        create => [ [qw( datacenterid paymentterm planid )], [] ],
+        clone => [ [qw( datacenterid linodeid planid )], [ 'paymentterm' ] ],
+        create => [ [ 'datacenterid', 'planid' ], [ 'paymentterm' ] ],
         delete => [ [ 'linodeid' ], [ 'skipchecks' ] ],
         list => [ [], [ 'linodeid' ] ],
         mutate => [ [ 'linodeid' ], [] ],
