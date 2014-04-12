@@ -118,7 +118,9 @@ sub get_old_new {
         },
         linode_ip => {
             addprivate => [ [ 'linodeid' ], [] ],
+            addpublic => [ [ 'linodeid' ], [] ],
             list => [ [ 'linodeid' ], [ 'ipaddressid' ] ],
+            swap => [ [ 'ipaddressid' ], [ 'tolinodeid', 'withipaddressid' ] ],
         },
         linode_job => {
             list => [ [ 'linodeid' ], [ 'jobid', 'pendingonly' ] ],
@@ -131,7 +133,7 @@ sub get_old_new {
         },
         nodebalancer_config => {
             create => [ [ 'nodebalancerid' ], [qw( algorithm check check_attempts check_body check_interval check_path check_timeout port protocol ssl_cert ssl_key stickiness )] ],
-            delete => [ [ 'configid' ], [] ],
+            delete => [ [ 'configid', 'nodebalancerid' ], [] ],
             list => [ [ 'nodebalancerid' ], [ 'configid' ] ],
             update => [ [ 'configid' ], [qw( algorithm check check_attempts check_body check_interval check_path check_timeout port protocol ssl_cert ssl_key stickiness )] ],
         },
@@ -151,7 +153,7 @@ sub get_old_new {
             echo => [ [], [] ],
         },
         user => {
-            getapikey => [ [ 'password', 'username' ], [] ],
+            getapikey => [ [ 'password', 'username' ], [qw( expires label token )] ],
         },
     };
 
