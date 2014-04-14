@@ -45,6 +45,7 @@ sub parse_spec {
 
 sub dump_validation {
     my $validation = shift;
+    print "{ \n";
     for my $group ( sort keys %$validation ) {
         print "    $group => {\n";
         for my $method ( sort keys %{ $validation->{$group} } ) {
@@ -54,6 +55,7 @@ sub dump_validation {
         }
         print "    },\n";
     }
+    print "}\n";
 }
 
 sub dump_arrayref {
