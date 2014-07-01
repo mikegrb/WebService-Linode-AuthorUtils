@@ -12,7 +12,7 @@ dump_validation($validation);
 sub get_spec {
     my $res = Mojo::UserAgent->new->get(
         "https://api.linode.com/?api_action=api.spec")->res;
-    die $res->error if $res->error;
+    die $res->error->{message} if $res->error;
     return $res;
 }
 
