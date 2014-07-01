@@ -5,13 +5,14 @@ use warnings;
 
 use Mojo::UserAgent;
 
+my $api_base   = shift ||  "https://api.linode.com/";
 my $spec       = get_spec();
 my $validation = parse_spec($spec);
 dump_validation($validation);
 
 sub get_spec {
     my $res = Mojo::UserAgent->new->get(
-        "https://api.linode.com/?api_action=api.spec")->res;
+        "${api_base}?api_action=api.spec")->res;
     die $res->error->{message} if $res->error;
     return $res;
 }
