@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use 5.018;
+use 5.014;
 
 use Term::ANSIColor;
 use List::Compare;
