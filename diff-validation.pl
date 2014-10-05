@@ -9,6 +9,7 @@ use List::Compare;
 use File::Slurp;
 
 my ( $old, $new ) = @ARGV or die "Usage: $0 old_validation new_validation";
+my $changes = 0;
 
 # don't eval untrusted shit, m'kay?
 eval '$_ = ' . read_file($_) for ( $old, $new );
@@ -16,12 +17,14 @@ eval '$_ = ' . read_file($_) for ( $old, $new );
 for my $group ( sort keys $old ) {
     unless ( exists $new->{$group} ) {
         say "Group $group no longer exists.\n";
+        $changes++;
         next;
     }
 
     for my $method ( sort keys $old->{$group} ) {
         unless ( exists $new->{$group}{$method} ) {
             say "Group $group.$method no longer exists.\n";
+            $changes++;
             next;
         }
 
@@ -36,6 +39,7 @@ for my $group ( sort keys $old ) {
         for my $type ( keys $args ) {
             next if $args->{$type}->is_LequivalentR();
             say "$group.$method difference in $type arguments: ";
+            $changes++;
             my @old = $args->{$type}->get_unique();
             print "\t";
             for my $differing ( $args->{$type}->get_symmetric_difference() ) {
@@ -50,6 +54,7 @@ for my $group ( sort keys $old ) {
     for my $method ( sort keys $new->{$group} ) {
         next if exists $old->{$group}{$method};
         say "New method $group.$method\n";
+        $changes++;
     }
 
 }
@@ -57,5 +62,7 @@ for my $group ( sort keys $old ) {
 for my $group ( sort keys $new ) {
     next if exists $old->{$group};
     say "New group $group\n";
+    $changes++;
 }
 
+exit $changes;
