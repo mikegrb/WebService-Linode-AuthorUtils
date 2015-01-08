@@ -4,11 +4,14 @@ use strict;
 use warnings;
 
 use Mojo::UserAgent;
+use Data::Dumper;
 
 my $api_base   = shift ||  "https://api.linode.com/";
 my $spec       = get_spec();
 my $validation = parse_spec($spec);
-dump_validation($validation);
+# dump_validation($validation);
+
+print Dumper $validation;
 
 sub get_spec {
     my $res = Mojo::UserAgent->new->get(
@@ -30,16 +33,12 @@ sub parse_spec {
         my ( $group, $method ) = ( lc($1), lc($2) );
         $group =~ tr/\./_/;
 
-        my ( @required, @optional );
         for my $parameter ( keys %{ $methods->{$remote_method}{PARAMETERS} } ) {
-            if ( $methods->{$remote_method}{PARAMETERS}{$parameter}{REQUIRED} )
-            {   push @required, lc $parameter;
-            }
-            else {
-                push @optional, lc $parameter;
-            }
+            my $key = $methods->{$remote_method}{PARAMETERS}{$parameter}{REQUIRED} ? 'required' : 'optional';
+            push @{ $validation->{$group}{$method}{$key} },
+                [ lc $parameter, $methods->{$remote_method}{PARAMETERS}{$parameter}{DESCRIPTION} ];
         }
-        $validation->{$group}{$method} = [ \@required, \@optional ];
+        $validation->{$group}{$method}{description} =$methods->{$remote_method}{DESCRIPTION};
     }
     return $validation;
 }
@@ -51,7 +50,8 @@ sub dump_validation {
         print "    $group => {\n";
         for my $method ( sort keys %{ $validation->{$group} } ) {
             my $args = join ', ',
-                map { dump_arrayref($_) } @{ $validation->{$group}{$method} };
+                map { ref $_ ? dump_arrayref($_) : qq{"$_"} } { $validation->{$group}{$method} };
+
             print "        $method => [ $args ],\n";
         }
         print "    },\n";
