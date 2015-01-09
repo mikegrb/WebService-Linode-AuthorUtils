@@ -9,9 +9,8 @@ use Data::Dumper;
 my $api_base   = shift ||  "https://api.linode.com/";
 my $spec       = get_spec();
 my $validation = parse_spec($spec);
-# dump_validation($validation);
 
-print Dumper $validation;
+print Data::Dumper->Dump( [ $validation ], [ 'verbose_validation' ] );
 
 sub get_spec {
     my $res = Mojo::UserAgent->new->get(
