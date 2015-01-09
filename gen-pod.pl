@@ -7,25 +7,40 @@ use File::Slurp;
 
 my $validation_file = shift || die "Usage: $0 filename";
 
-my $ref;
-eval '$ref = ' . read_file($validation_file);
-my %validation = %$ref;
+my $verbose_validation;
+eval read_file($validation_file);
+my %validation = %$verbose_validation;
 
-foreach my $group (qw{avail domain domain_resource linode linode_config linode_disk linode_ip linode_job stackscript nodeblancer nodebalancer_config  nodebalancer_node  user}) {
-    # print "=head2 $group\n\n";
-    foreach my $method (keys %{$validation{$group}}) {
-        print "=head3 ${group}_${method}\n\n";
-        if (@{$validation{$group}{$method}[0]}) {
-            print "Required Parameters:\n\n";
-            print "=over 4\n\n";
-            print "=item * $_\n\n" for @{$validation{$group}{$method}[0]};
-            print "=back\n\n";
-        }
-        if (@{$validation{$group}{$method}[1]}) {
-            print "Optional Parameters:\n\n";
-            print "=over 4\n\n";
-            print "=item * $_\n\n" for @{$validation{$group}{$method}[1]};
-            print "=back\n\n";
-        }
+foreach my $group ( qw{ account avail domain domain_resource linode
+  linode_config linode_disk linode_ip linode_job stackscript
+  nodeblancer nodebalancer_config nodebalancer_node user image })
+{
+
+  foreach my $method ( sort keys %{ $validation{$group} } ) {
+    print "=head3 ${group}_${method}\n\n";
+    print $validation{$group}{$method}{description} . "\n\n" if $validation{$group}{$method}{description};
+
+    if ( exists $validation{$group}{$method}{required} && @{ $validation{$group}{$method}{required} } ) {
+      print "Required Parameters:\n\n";
+      print "=over 4\n\n";
+      print generate_item($_) for ( sort @{ $validation{$group}{$method}{required} } );
+      print "=back\n\n";
     }
+
+    if ( exists $validation{$group}{$method}{optional} && @{ $validation{$group}{$method}{optional} } ) {
+      print "Optional Parameters:\n\n";
+      print "=over 4\n\n";
+      print generate_item($_) for ( sort @{ $validation{$group}{$method}{optional} } );
+      print "=back\n\n";
+    }
+
+  }
+}
+
+sub generate_item {
+  my $item_info = shift;
+  my $result    = "=item * $item_info->[0]";
+  $result .= ' - ' . $item_info->[1] if $item_info->[1];
+  $result .= "\n\n";
+  return $result;
 }
