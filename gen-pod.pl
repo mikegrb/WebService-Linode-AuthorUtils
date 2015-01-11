@@ -3,12 +3,11 @@
 use strict;
 use warnings;
 
-use File::Slurp;
-
-my $validation_file = shift || die "Usage: $0 filename";
+# validation file as command line argument of via stdin
+my $validation_source = join '', <>;
 
 my $verbose_validation;
-eval read_file($validation_file);
+eval $validation_source; # don't eval untrusted stuff, m'kay
 my %validation = %$verbose_validation;
 
 foreach my $group ( qw{ account avail domain domain_resource linode
