@@ -10,6 +10,8 @@ my $verbose_validation;
 eval $validation_source; # don't eval untrusted stuff, m'kay
 my %validation = %$verbose_validation;
 
+print "=for autogen\n\n";
+
 foreach my $group ( qw{ account avail domain domain_resource linode
   linode_config linode_disk linode_ip linode_job stackscript
   nodeblancer nodebalancer_config nodebalancer_node user image })
@@ -35,6 +37,8 @@ foreach my $group ( qw{ account avail domain domain_resource linode
 
   }
 }
+
+print "=for endautogen\n";
 
 sub generate_item {
   my $item_info = shift;
