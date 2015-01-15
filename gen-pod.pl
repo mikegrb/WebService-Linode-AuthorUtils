@@ -17,6 +17,8 @@ foreach my $group ( qw{ account avail domain domain_resource linode
   nodeblancer nodebalancer_config nodebalancer_node user image })
 {
 
+  print "=head2 $group Methods\n\n";
+
   foreach my $method ( sort keys %{ $validation{$group} } ) {
     print "=head3 ${group}_${method}\n\n";
     print $validation{$group}{$method}{description} . "\n\n" if $validation{$group}{$method}{description};
@@ -42,8 +44,7 @@ print "=for endautogen\n";
 
 sub generate_item {
   my $item_info = shift;
-  my $result    = "=item * $item_info->[0]";
-  $result .= ' - ' . $item_info->[1] if $item_info->[1];
-  $result .= "\n\n";
+  my $result    = "=item * $item_info->[0]\n\n";
+  $result .= $item_info->[1] . "\n\n" if $item_info->[1];
   return $result;
 }
