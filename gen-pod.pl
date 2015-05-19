@@ -14,7 +14,8 @@ print "=for autogen\n\n";
 
 foreach my $group ( qw{ account avail domain domain_resource linode
   linode_config linode_disk linode_ip linode_job stackscript
-  nodeblancer nodebalancer_config nodebalancer_node user image })
+  nodeblancer nodebalancer_config nodebalancer_node user image
+  professionalservices_scope } )
 {
 
   print "=head2 $group Methods\n\n";
