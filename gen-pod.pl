@@ -46,6 +46,16 @@ print "=for endautogen\n";
 sub generate_item {
   my $item_info = shift;
   my $result    = "=item * $item_info->[0]\n\n";
-  $result .= $item_info->[1] . "\n\n" if $item_info->[1];
+  $result .= trim($item_info->[1]) . "\n\n" if $item_info->[1];
   return $result;
+}
+
+sub trim {
+  my $text = shift;
+  return unless $text;
+  for ($text) {
+    s/^\s+//;
+    s/\s+$//;
+  }
+  return $text;
 }
